@@ -101,3 +101,16 @@ deploy multiple smart contract in the same chain code.
     deployMultipleContract.sh
 
     https://www.youtube.com/watch?v=TZY2Gooh4f8&list=PLSBNVhWU6KjW4qo1RlmR7cvvV8XIILub6&index=59
+
+Smart Contract
+    Events -
+        artifacts/src/github.com/fabcar/go/fabcar.go    
+        Line 46 - raising events.
+        Client listener - api-2.0/app/Listeners.js
+
+
+    Contract Listener
+    await contract.addContractListener(contractListener);
+
+    Network Listener
+    await network.addBlockListener(blockListener);
