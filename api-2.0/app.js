@@ -30,7 +30,9 @@ app.use(bodyParser.urlencoded({
 // set secret variable
 app.set('secret', 'thisismysecret');
 app.use(expressJWT({
-    secret: 'thisismysecret'
+    secret: 'thisismysecret',
+    // credentialsRequired: false,
+    // ignoreExpiration: true,
 }).unless({
     path: ['/users','/users/login', '/register']
 }));
@@ -94,10 +96,14 @@ app.post('/users', async function (req, res) {
     }
 
     var token = jwt.sign({
-        exp: Math.floor(Date.now() / 1000) + parseInt(constants.jwt_expiretime),
+        // exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),// Math.floor(Date.now() / 1000) + parseInt(constants.jwt_expiretime),
         username: username,
-        orgName: orgName
-    }, app.get('secret'));
+        orgName: orgName,
+        // iat: null
+        // iat: Math.floor(Date.now() / 1000) - 30
+        // exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
+        // iat: Math.floor(Date.now() / 1000) - (60 * 60 * 24)
+    }, app.get('secret'), /*{ expiresIn: '24h' }*/);
 
     let response = await helper.getRegisteredUser(username, orgName, true);
 

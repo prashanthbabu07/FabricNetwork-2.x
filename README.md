@@ -23,6 +23,9 @@ Steps:
 
 1) Clone the repo
 
+download binaries from github
+https://github.com/hyperledger/fabric-ca/releases/tag/v1.5.2
+https://github.com/hyperledger/fabric/releases/tag/v2.2.0
 
 2) Run Certificates Authority Services for all Orgs
     cd artifacts/channel/create-certificate-with-ca
@@ -31,6 +34,7 @@ Steps:
 
 
 3) Create Cryptomaterials for all organizations
+    export PATH="/Volumes/Sandisk/Binaries/Hyperledger/hyperledger-fabric-darwin-amd64-2.2.0/bin:${PATH}"   
     artifacts/channel/create-certificate-with-ca/create-certificate-with-ca.sh
 
     
@@ -51,6 +55,9 @@ Steps:
    3) Install Chaincode on all Endorsing Peer
    4) Approve Chaincode as per Lifecycle Endorsment Policy
    5) Commit Chaincode Defination
+
+   disable "use gRPC FUSE for file sharing in dockers" as the deployment will fail.
+   https://github.com/docker/for-mac/issues/4955
 
     deployChaincode.sh
 
