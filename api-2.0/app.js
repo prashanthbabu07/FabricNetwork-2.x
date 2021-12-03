@@ -31,18 +31,21 @@ app.use(bodyParser.urlencoded({
 // app.set('secret', 'thisismysecret');
 
 const fs = require('fs');
-var privateKey = fs.readFileSync('private.key');
-var publicKey = fs.readFileSync('public.key');
+var privateKey = fs.readFileSync('./private.key');
+var publicKey = fs.readFileSync('./public.key');
 
-app.use(expressJWT({
-    // secret: 'thisismysecret',
-    secret: privateKey,
-    // credentialsRequired: false,
-    // ignoreExpiration: true,
-}).unless({
-    path: ['/users','/users/login', '/register']
-}));
-app.use(bearerToken());
+console.log(privateKey, publicKey);
+
+// app.use(expressJWT({
+//     // secret: 'thisismysecret',
+//     secret: privateKey,
+//     algorithms: ['RSA256'],
+//     credentialsRequired: false,
+//     ignoreExpiration: true,
+// }).unless({
+//     path: ['/users','/users/login', '/register']
+// }));
+// app.use(bearerToken());
 
 logger.level = 'debug';
 
@@ -52,7 +55,9 @@ app.use((req, res, next) => {
     if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/users/login') >= 0 || req.originalUrl.indexOf('/register') >= 0) {
         return next();
     }
-    var token = req.token;
+    // var token = req.token;
+    let token = req.headers.authorization.split(" ")[1];
+    console.log("token", token);
     jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
             console.log(`Error ================:${err}`)
@@ -102,14 +107,14 @@ app.post('/users', async function (req, res) {
     }
 
     var token = jwt.sign({
-        // exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),// Math.floor(Date.now() / 1000) + parseInt(constants.jwt_expiretime),
+        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),// Math.floor(Date.now() / 1000) + parseInt(constants.jwt_expiretime),
         username: username,
         orgName: orgName,
         // iat: null
         // iat: Math.floor(Date.now() / 1000) - 30
         // exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
         // iat: Math.floor(Date.now() / 1000) - (60 * 60 * 24)
-    }, app.get('secret'), /*{ expiresIn: '24h' }*/);
+    }, privateKey, { algorithm: 'RS256' }) //app.get('secret'), /*{ expiresIn: '24h' }*/);
 
     let response = await helper.getRegisteredUser(username, orgName, true);
 

@@ -25,5 +25,8 @@
     "log4js": "^6.2.0",
     "npm": "^6.14.6",
     "save": "^2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
