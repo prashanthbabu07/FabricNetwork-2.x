@@ -28,9 +28,15 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 // set secret variable
-app.set('secret', 'thisismysecret');
+// app.set('secret', 'thisismysecret');
+
+const fs = require('fs');
+var privateKey = fs.readFileSync('private.key');
+var publicKey = fs.readFileSync('public.key');
+
 app.use(expressJWT({
-    secret: 'thisismysecret',
+    // secret: 'thisismysecret',
+    secret: privateKey,
     // credentialsRequired: false,
     // ignoreExpiration: true,
 }).unless({
@@ -47,7 +53,7 @@ app.use((req, res, next) => {
         return next();
     }
     var token = req.token;
-    jwt.verify(token, app.get('secret'), (err, decoded) => {
+    jwt.verify(token, publicKey, (err, decoded) => {
         if (err) {
             console.log(`Error ================:${err}`)
             res.send({
@@ -139,7 +145,7 @@ app.post('/register', async function (req, res) {
         exp: Math.floor(Date.now() / 1000) + parseInt(constants.jwt_expiretime),
         username: username,
         orgName: orgName
-    }, app.get('secret'));
+    }, privateKey, { algorithm: 'RS256' });
 
     console.log(token)
 
